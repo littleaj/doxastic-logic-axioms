@@ -1,23 +1,23 @@
 %% Agents:
 %%    Entities which can hold beliefs and belong to social `groups`.
 
-agents(A) :-
-  is_set(A),
-  forall(member(M, A), atom(M)),
-  foreach(member(M, A), assertz(M :- agent_details(M))),
+agents(SetOfAgents) :-
+  is_set(SetOfAgents),
+  forall(member(Agent, SetOfAgents), atom(Agent)),
+  foreach(member(Agent, SetOfAgents), assertz(Agent :- agent_details(Agent))),
   !.
-is_agent(A) :- agents(S), member(A, S), !.
+is_agent(Agent) :- agents(Set), member(Agent, Set), !.
 
-is_belief(B) :- atom(B).
-is_belief(B) :- compound(B).
+is_belief(Belief) :- atom(Belief).
+is_belief(Belief) :- compound(Belief).
 
-holds_beliefs(Agent, B) :-
+holds_beliefs(Agent, Beliefs) :-
   is_agent(Agent),
-  is_set(B),
-  forall(member(M, B), is_belief(M)),
+  is_set(Beliefs),
+  forall(member(B, Beliefs), is_belief(B)),
   !.
 
-has_belief(Agent, Prop) :-
+believes(Agent, Prop) :-
   holds_beliefs(Agent, BeliefsOfAgent),
   member(Prop, BeliefsOfAgent),
   !.
